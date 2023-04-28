@@ -50,9 +50,7 @@ def train_model(train_loader):
             target_b = targets[rand_index]
             bbx1, bby1, bbx2, bby2 = rand_bbox(inputs.size(), lam)
             inputs[:, :, bbx1:bbx2, bby1:bby2] = inputs[rand_index, :, bbx1:bbx2, bby1:bby2]
-            # adjust lambda to exactly match pixel ratio
             lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (inputs.size()[-1] * inputs.size()[-2]))
-            # compute output
             output = model(inputs)
             loss = loss_fn(output, target_a,config["n_shot"])[0]* lam + loss_fn(output, target_b,config["n_shot"])[0]* (1. - lam)
             acc = loss_fn(output, target_a,config["n_shot"])[1]* lam + loss_fn(output, target_b,config["n_shot"])[1]* (1. - lam)

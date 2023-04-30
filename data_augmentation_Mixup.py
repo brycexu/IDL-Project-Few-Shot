@@ -28,7 +28,8 @@ def train_model(train_loader):
         rand_index = torch.randperm(inputs.size()[0]).to(DEVICE)
         target_a = targets
         target_b = targets[rand_index]
-        inputs, targets_a, targets_b = map(Variable, (inputs, targets_a, targets_b))
+        mixed_x = lam * inputs + (1 - lam) * inputs[index, :]
+        inputs, targets_a, targets_b = map(Variable, (mixed_x, targets_a, targets_b))
         output = model(inputs)
         loss_a,acc_a = loss_fn(input=output, target=target_a, n_support=config["n_shot"])
         loss_b,acc_b = loss_fn(input=output, target=target_b, n_support=config["n_shot"])
